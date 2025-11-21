@@ -1,0 +1,2 @@
+args = "build"
+fs.cwd = "test-project"

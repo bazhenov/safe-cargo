@@ -1,0 +1,2 @@
+args = "run --example=write-to-homedir"
+fs.cwd = "../.."

@@ -1,0 +1,95 @@
+(version 1)
+;(debug allow)
+
+(deny default)
+(allow process*)
+
+(allow sysctl-read)
+(allow mach-lookup)
+(allow ipc-posix-shm-read-data)
+(allow user-preference-read)
+
+; Networking
+(allow network-outbound
+    (remote ip "*:80")
+    (remote ip "*:443")
+    (remote unix-socket (path-literal "/private/var/run/mDNSResponder"))
+)
+
+(allow file-write*
+    (prefix "/Users/bazhenov/Developer/tango/")
+    (prefix "/private/var/folders/sk/2r2mhj2x3gb513p_xxp25dwr0000gn/T")
+    (literal "/dev/null")
+    (literal "/dev/tty")
+
+    ; dtrace user defined probes
+    (literal "/dev/dtracehelper")
+)
+
+(allow file-ioctl
+    (literal "/dev/dtracehelper")
+)
+
+(allow file-read-metadata
+  (prefix "/")
+)
+
+(allow file-read*
+  (literal "/")
+  (prefix "/private/etc")
+  (prefix "/private/var/db/timezone")
+  (prefix "/private/var/folders/sk/2r2mhj2x3gb513p_xxp25dwr0000gn/T")
+  (literal "/dev/autofs_nowait")
+
+  (regex #"/.CFUserTextEncoding$")
+
+  (prefix "/Applications/Xcode.app/Contents/Developer")
+
+  (literal "/dev/urandom")
+  (literal "/dev/random")
+  (literal "/dev/null")
+  (literal "/dev/dtracehelper")
+
+  ; working dir
+  (prefix "/Users/bazhenov/Developer/tango")
+
+  (prefix "/Users/bazhenov/.rustup")
+  (prefix "/Users/bazhenov/.cargo")
+
+; PATH
+  (prefix "/usr/bin")
+  (prefix "/Users/bazhenov/.cargo/bin")
+  (prefix "/opt/homebrew/")
+  (prefix "/Users/bazhenov/bin")
+  (prefix "/opt/homebrew/bin")
+  (prefix "/opt/homebrew/sbin")
+  (prefix "/usr/local/bin")
+  (prefix "/System/Cryptexes/App/usr/bin")
+  (prefix "/usr/bin")
+  (prefix "/bin")
+  (prefix "/usr/sbin")
+  (prefix "/sbin")
+  (prefix "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin")
+  (prefix "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin")
+  (prefix "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin")
+  (prefix "/Library/Apple/usr/bin")
+  (prefix "/opt/homebrew/opt/llvm/bin")
+  (prefix "/Users/bazhenov/.cargo/bin")
+  (prefix "/Users/bazhenov/bin")
+  (prefix "/Users/bazhenov/.orbstack/bin")
+  (prefix "/Users/bazhenov/Library/Application Support/JetBrains/Toolbox/scripts")
+  (prefix "/opt/homebrew/opt/fzf/bin")
+  (prefix "/Users/bazhenov/.orbstack/bin")
+  (prefix "/opt/homebrew/sbin")
+  (prefix "/opt/homebrew/bin")
+
+  (prefix "/usr/lib/")
+  (prefix "/usr/lib/info/")
+  (prefix "/private/var/db/dyld/")
+  (prefix "/System/Library/Frameworks/")
+  (prefix "/System/Library/PrivateFrameworks/")
+  (prefix "/System/Library/")
+  (prefix "/System/Volumes/Preboot/Cryptexes/OS")
+
+  (prefix "/Library/Preferences")
+)

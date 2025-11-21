@@ -1,0 +1,17 @@
+[package]
+name = "cargo-safe"
+version = "0.1.0"
+edition = "2024"
+authors = ["Denis Bazhenov <dotsid@gmail.com>"]
+categories = ["development-tools::cargo-plugins"]
+description = "Build and runs code in a sandboxed environment"
+repository = "https://github.com/bazhenov/cargo-safe"
+documentation = "https://github.com/bazhenov/cargo-safe"
+keywords = ["cargo", "subcommand"]
+license = "MIT OR Apache-2.0"
+
+[dependencies]
+
+[dev-dependencies]
+indoc = "2.0.7"
+trycmd = "0.15.11"

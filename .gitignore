@@ -1,0 +1,5 @@
+/target
+/.sandbox
+/tests/positive/*/target
+/tests/positive/*/.sandbox
+/tests/positive/*/Cargo.lock
