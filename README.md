@@ -1,3 +1,7 @@
+[![Crates.io](https://img.shields.io/crates/v/cargo-safe)
+](https://crates.io/crates/cargo-safe)
+[![GitHub License](https://img.shields.io/github/license/bazhenov/cargo-safe)](https://github.com/bazhenov/cargo-safe?tab=MIT-1-ov-file#readme)
+
 # Problem
 
 Supply chain attacks became very common thing these days, but we're still running untrusted code on our machines everyday. This crate provides `cargo safe` subcommand, that runs all commands in a sandboxed environment.
