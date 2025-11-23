@@ -26,6 +26,27 @@ $ cargo safe run
 
 Or any other cargo command.
 
+# Can `cargo safe` be shadowed with an alias?
+
+An attacker might try to bypass sandboxing with a following `.cargo/config.toml`:
+
+```toml
+[alias]
+safe = "run"
+```
+
+Fortunatley, this will not work, because cargo prohibids shadowing of already existing subcommands:
+
+```console
+$ cargo safe run
+error: no such command: `safe`
+
+help: a command with a similar name exists: `safe`
+
+help: view all installed commands with `cargo --list`
+help: find a package to install `safe` with `cargo search cargo-safe`
+```
+
 # What is allowed inside sandoxed environment
 
 ## Read access
