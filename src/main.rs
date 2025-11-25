@@ -1,18 +1,17 @@
 use crate::seatbelt::{Filter, Operation, Profile, allow, deny};
-use std::process::ExitCode;
-use std::{collections::VecDeque, env, fs, io, path::Path, process::Command};
+use std::{
+    collections::VecDeque,
+    env, fs, io,
+    path::Path,
+    process::{Command, ExitCode},
+};
 
 /// This crate is available only on macOS becuase it relies on `sandbox-exec` cli tool
 #[cfg(target_os = "macos")]
 fn main() -> Result<ExitCode, io::Error> {
     let mut args = env::args().collect::<VecDeque<_>>();
 
-    // skipping program name
     let _program_name = args.pop_front();
-    // skipping "safe" if command is called as "cargo safe"
-    if let Some("safe") = args.front().map(String::as_str) {
-        args.pop_front();
-    }
 
     let Ok(workspace_path) = env::current_dir() else {
         panic!("Error reading current directory");

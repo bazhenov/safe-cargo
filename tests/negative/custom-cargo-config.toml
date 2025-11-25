@@ -1,4 +1,0 @@
-bin.name = "cargo"
-status.code = 101
-args = "--config tests/negative/cargo-config-with-safe-alias.toml safe run --example=read-ssh-key"
-fs.cwd = "../.."
