@@ -58,4 +58,4 @@ Sandobx allow access to list all files (without reading their content), and read
  - communication over `/private/var/run/mDNSResponder` – to allow DNS lookups
  - outbound network connections to ports 80/443 - to download crates
 
-Full list of permissions can be found in [sources](https://github.com/bazhenov/safe-cargo/blob/e30912c7c545e1565142f145420eba87d1f1b299/src/main.rs#L45-L157).
+Full list of permissions can be found in [sources](https://github.com/bazhenov/safe-cargo/blob/c8b377e902d09c2e2d570b4b8ecbc3809baad739/src/lib.rs#L4).
