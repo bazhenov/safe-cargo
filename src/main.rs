@@ -8,11 +8,19 @@ use std::{
 /// This crate is available only on macOS because it relies on `sandbox-exec` cli tool
 #[cfg(target_os = "macos")]
 fn main() -> Result<ExitCode, io::Error> {
+    use clap::{Arg, ArgAction, command};
+
     const CARGO_TARGET_DIR: &str = "CARGO_TARGET_DIR";
 
-    // skipping program name
-    let args = env::args().skip(1).collect::<Vec<_>>();
+    let cmd = command!().args(&[Arg::new("dump-profile")
+        .short('d')
+        .long("dump-profile")
+        .help("Print a sandbox profile contents")
+        .action(ArgAction::SetTrue)]);
+
+    let args = env::args().collect::<Vec<_>>();
     let Args { cargo_args, args } = split_cargo_args(args);
+    let options = cmd.get_matches_from(args);
 
     let Some(workspace_path) = env::current_dir().and_then(find_workspace_dir)? else {
         panic!("Unable to find cargo workspace directory");
@@ -29,10 +37,12 @@ fn main() -> Result<ExitCode, io::Error> {
     }
 
     let sandbox_profile = prepare_profile(&workspace_path, &sandbox_path)?;
-    if args.iter().any(|o| *o == "--dump-profile") {
+
+    if options.get_flag("dump-profile") {
         println!("{}", sandbox_profile);
         return Ok(ExitCode::SUCCESS);
     }
+
     let profile_path = sandbox_path.join("profile.sb");
     fs::write(&profile_path, sandbox_profile.to_string())?;
 
