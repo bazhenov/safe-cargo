@@ -1,21 +1,29 @@
 use safe_cargo::prepare_profile;
 use std::{
     env, fs, io,
+    path::PathBuf,
     process::{Command, ExitCode},
 };
 
 /// This crate is available only on macOS becuase it relies on `sandbox-exec` cli tool
 #[cfg(target_os = "macos")]
 fn main() -> Result<ExitCode, io::Error> {
+    const CARGO_TARGET_DIR: &str = "CARGO_TARGET_DIR";
+
     // skipping program name
     let args = env::args().skip(1).collect::<Vec<_>>();
     let Args { cargo_args, args } = split_cargo_args(args);
 
-    let Ok(workspace_path) = env::current_dir() else {
-        panic!("Error reading current directory");
+    let Some(workspace_path) = env::current_dir().and_then(find_workspace_dir)? else {
+        panic!("Unable to find cargo workspace directory");
     };
 
-    let sandbox_path = workspace_path.join(".sandbox");
+    let target_path = env::var(CARGO_TARGET_DIR)
+        .map(PathBuf::from)
+        .ok()
+        .unwrap_or_else(|| workspace_path.join("target"));
+
+    let sandbox_path = target_path.join("cargo-safe");
     if !fs::exists(&sandbox_path)? {
         fs::create_dir_all(&sandbox_path)?;
     }
@@ -33,7 +41,7 @@ fn main() -> Result<ExitCode, io::Error> {
         .arg(profile_path)
         .arg("cargo")
         .args(cargo_args)
-        .env("CARGO_TARGET_DIR", sandbox_path.join("target"))
+        .env(CARGO_TARGET_DIR, sandbox_path.join("target"))
         .env("CARGO_HOME", sandbox_path.join("cargo"))
         .spawn()?
         .wait()?;
@@ -69,6 +77,19 @@ fn split_cargo_args<T: AsRef<str>>(mut args: Vec<T>) -> Args<T> {
             args: vec![],
         }
     }
+}
+
+fn find_workspace_dir(path: PathBuf) -> io::Result<Option<PathBuf>> {
+    let mut path = fs::canonicalize(path)?;
+    if path.join("Cargo.toml").exists() {
+        return Ok(Some(path));
+    }
+    while path.pop() {
+        if path.join("Cargo.toml").exists() {
+            return Ok(Some(path));
+        }
+    }
+    Ok(None)
 }
 
 #[cfg(test)]
