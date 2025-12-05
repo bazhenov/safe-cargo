@@ -50,6 +50,7 @@ Sandbox allow access to list all files (without reading their content), and read
 ## Write access
 
  - OS temporary directory
+ - current controlling tty
  - `cargo` and `target` directories private to a sandbox (separate from `$HOME/.cargo` and `target` in your workdir)
  - `Cargo.lock` in your project directory – otherwise it's impossible to build a project
 

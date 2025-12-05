@@ -1,5 +1,10 @@
+use nix::unistd::ttyname;
 use seatbelt::{Filter, Operation, Profile, allow, deny};
-use std::{env, fs, io, path::Path};
+use std::{
+    env, fs,
+    io::{self, stdin},
+    path::Path,
+};
 
 pub fn prepare_profile(workspace: &Path, sandbox: &Path) -> Result<Profile, io::Error> {
     use Filter::*;
@@ -107,6 +112,12 @@ pub fn prepare_profile(workspace: &Path, sandbox: &Path) -> Result<Profile, io::
                 Prefix(format!("{}/target", sandbox_path)),
             ],
         ));
+    }
+
+    // Ability to control current terminal
+    if let Ok(tty) = ttyname(stdin()) {
+        let tty_path = tty.to_str().unwrap().to_owned();
+        rules.push(allow(FileIoctl, vec![Literal(tty_path)]));
     }
 
     Ok(Profile(rules))
